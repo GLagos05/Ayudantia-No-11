@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+
+import GUIs.VentanaMenuVentas;
 import data.GestorDatos;
-import utils.CalculoRut;
+import utils.ValidadorRut;
 import utils.GestorPDF;
 
 public class Automotora {
@@ -107,9 +109,8 @@ public class Automotora {
     }
 
     public void añadirVendedores(){
-        CalculoRut calculoRut = new CalculoRut();
         Vendedor vendedor = new Vendedor("German","20.919.321-3",20);
-        if (CalculoRut.verificarRut(vendedor.getRut())){
+        if (ValidadorRut.validarRut(vendedor.getRut())){
             this.vendedores.add(vendedor);
         }else{
             System.out.println("Rut no válido");
@@ -140,17 +141,16 @@ public class Automotora {
         return clientes;
     }
 
-    public void añadirClientes(){
-        CalculoRut calculoRut = new CalculoRut();
-        Cliente cliente = new Cliente("Cliente","12345678-9","casa","cliente@cliente.cl","123456789");
-        if (CalculoRut.verificarRut(cliente.getRut())){
+    public void añadirClientes(String nombre, String rut, String direccion, String correo, String numero){
+        Cliente cliente = new Cliente(nombre,rut,direccion,correo,numero);
+        if (ValidadorRut.validarRut(cliente.getRut())){
             this.clientes.add(cliente);
         }else{
             System.out.println("Rut no válido");
         }
     }
 
-    public List<Cliente> buscarClienteNombre(String nombre){ //arraylist
+    public List<Cliente> buscarClienteNombre(String nombre){
         List<Cliente> clientes = new ArrayList<Cliente>();
         for (Cliente cliente : this.clientes) {
             if (cliente.getNombre().equals(nombre)) {
@@ -180,8 +180,17 @@ public class Automotora {
         cliente.setNumeroTelefono(numero);
     }
 
-    public void eliminarClientes(Cliente cliente){
-        this.clientes.remove(cliente);
+    public void eliminarClientes(String nombre){
+        for (Cliente cliente : this.clientes) {
+            if (cliente.getNombre().equals(nombre)) {
+                this.clientes.remove(cliente);
+            }
+        }
+    }
+
+    public void añadirVehiculo(String nombre, ColorVehiculo color, MarcaVehiculo marca, int año, int precio, double kmRecorridos){
+        Vehiculo vehiculo = new Vehiculo(nombre,color,marca,año,precio,kmRecorridos);
+        this.vehiculosAVenta.add(vehiculo);
     }
 
     public List<Venta> getVentas() {
@@ -210,7 +219,7 @@ public class Automotora {
 
     public void probarVenta(){
         añadirVendedores();
-        añadirClientes();
+        añadirClientes("Cliente","12345678-9","casa","cliente@cliente.cl","123456789");
         añadirVehiculosPorVender();
         añadirVenta("Cliente", "Celerio");
         añadirVenta("Cliente", "Hilux");
@@ -221,6 +230,15 @@ public class Automotora {
         GestorDatos.registrarDatos(clientes,"target/"+"clientes.txt");
         GestorDatos.registrarDatos(vehiculos,"target/"+"vehiculos.txt");
         GestorDatos.registrarDatos(vendedores,"target/"+"vendedores.txt");
+    }
+
+    public void abrirVentanaAutomotora(Automotora automotora){
+        VentanaMenuVentas ventanaMenuVentas = new VentanaMenuVentas("Menú de Ventas",500,500,automotora);
+    }
+
+    public void probarVentanas(){
+        Automotora automotora = new Automotora();
+        automotora.abrirVentanaAutomotora(automotora);
     }
 
 }

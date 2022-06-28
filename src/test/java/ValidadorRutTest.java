@@ -1,11 +1,11 @@
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import utils.CalculoRut;
+import utils.ValidadorRut;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CalculoRutTest {
+class ValidadorRutTest {
     private String[] rut;
     private String[] digitosVerificador;
     private String[] rutInvertidos;
@@ -25,7 +25,7 @@ class CalculoRutTest {
     void invertirOrdenTest(){
         boolean condicion = true;
         for (int i = 0; i < rutInvertidos.length; i++) {
-            String rutInvertido = CalculoRut.invertirOrden(rut[i]);
+            String rutInvertido = ValidadorRut.invertirOrden(rut[i]);
             if(!rutInvertido.equals(rutInvertidos[i])){
                 condicion = false;
             }
@@ -38,7 +38,7 @@ class CalculoRutTest {
     void calculoDigitoVerificadorTest(){
         boolean condicion = true;
         for (int i = 0; i < rut.length; i++) {
-            String digitoVerificador = CalculoRut.calculoDigitoVerificador(rut[i]);
+            String digitoVerificador = ValidadorRut.calculoDigitoVerificador(rut[i]);
             if(!digitoVerificador.equals(digitosVerificador[i])){
                 condicion = false;
             }
@@ -50,8 +50,8 @@ class CalculoRutTest {
     void validarRutTest(){
         boolean condicion = true;
         for (int i = 0; i < rutValidados.length; i++) {
-            String rutSinDigitos = CalculoRut.tomarNumeros(rutValidados[i]);
-            boolean validador = CalculoRut.validarRut(rutSinDigitos);
+            String rutSinDigitos = ValidadorRut.tomarNumeros(rutValidados[i]);
+            boolean validador = ValidadorRut.validarNumeros(rutSinDigitos);
             if(validador != validaciones[i]){
                 condicion = false;
             }

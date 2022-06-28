@@ -1,22 +1,21 @@
 package utils;
 
-public class CalculoRut {
-    public static void main(String[] args) {
-        menu();
-    }
+public class ValidadorRut {
 
-    public static void menu() {
-        String rut = "20.919.321-3";
-        verificarRut(rut);
-    }
-
-    public static boolean verificarRut(String rut) {
+    public static boolean validarRut(String rut) {
+        String digitoRut = tomarDigito(rut);
         String rutSinDigito = tomarNumeros(rut);
-        boolean validador = validarRut(rutSinDigito);
-        if(validador){
-            calculoDigitoVerificador(rutSinDigito);
+        String digitoCalculado;
+        if(validarNumeros(rutSinDigito)){
+            digitoCalculado = calculoDigitoVerificador(rutSinDigito);
+        }else{
+            return false;
         }
-        return validador;
+        return validarDigito(digitoRut,digitoCalculado);
+    }
+
+    private static String tomarDigito(String rut) {
+        return rut.substring(rut.length()-1);
     }
 
     public static String tomarNumeros(String rut) {
@@ -25,16 +24,25 @@ public class CalculoRut {
         return rut.substring(0,rut.length()-1);
     }
 
-    public static boolean validarRut(String rutSinDigito) {
+    public static boolean validarNumeros(String rutSinDigito) {
         int numeroRut;
         boolean validador = true;
         try{
             numeroRut = Integer.parseInt(rutSinDigito);
         }catch (Exception e){
-            System.out.println("Rut no válido");
+            System.out.println("Ingrese números válidos");
             validador = false;
         }
         return validador;
+    }
+
+    private static boolean validarDigito(String digitoRut, String digitoCalculado) {
+        if (digitoCalculado.equals(digitoRut)){
+            return true;
+        }else{
+            System.out.println("Ingrese un rut válido");
+            return false;
+        }
     }
 
     public static String calculoDigitoVerificador(String rutSinDigito) {
@@ -45,17 +53,15 @@ public class CalculoRut {
         double dividirRut = dividirResultados(sumaRut);
         int multiplicacionEntera = tomarDecimales(dividirRut);
         int restaRut = restarResultados(sumaRut,multiplicacionEntera);
-        String digitoVer = obtenerDigitoVerificador(restaRut);
-        mostrarResultados(digitoVer);
-        return digitoVer;
+        return obtenerDigitoVerificador(restaRut);
     }
 
-    public static String invertirOrden(String cadenaRut) {
-        StringBuilder stringBuilder = new StringBuilder(cadenaRut);
+    public static String invertirOrden(String rutSinDigito) {
+        StringBuilder stringBuilder = new StringBuilder(rutSinDigito);
         return stringBuilder.reverse().toString();
     }
 
-    public static int[] generarArregloRut(String palabraRutInvertida) {
+    private static int[] generarArregloRut(String palabraRutInvertida) {
         int[] arregloCaracteres = new int[palabraRutInvertida.length()];
         for (int i = 0; i < arregloCaracteres.length; i++) {
             arregloCaracteres[i] = Integer.parseInt(String.valueOf(palabraRutInvertida.charAt(i)));
@@ -63,7 +69,7 @@ public class CalculoRut {
         return arregloCaracteres;
     }
 
-    public static void multiplicarDigitos(int[] arregloCaracteres) {
+    private static void multiplicarDigitos(int[] arregloCaracteres) {
         int[] cadena = {2,3,4,5,6,7};
         int contador = 0;
         for (int i = 0; i < arregloCaracteres.length; i++) {
@@ -75,7 +81,7 @@ public class CalculoRut {
         }
     }
 
-    public static int sumarMultiplicaciones(int[] arregloCaracteres) {
+    private static int sumarMultiplicaciones(int[] arregloCaracteres) {
         int sumaArregloRut = 0;
         for (int i = 0; i < arregloCaracteres.length; i++) {
             sumaArregloRut += arregloCaracteres[i];
@@ -83,30 +89,25 @@ public class CalculoRut {
         return sumaArregloRut;
     }
 
-    public static double dividirResultados(int sumaArregloRut) {
+    private static double dividirResultados(int sumaArregloRut) {
         return sumaArregloRut/11;
     }
 
-    public static int tomarDecimales(double divisionSumas) {
+    private static int tomarDecimales(double divisionSumas) {
         return ((int)divisionSumas)*11;
     }
 
-    public static int restarResultados(int sumaMultiplicaciones, int multSinDecimales) {
+    private static int restarResultados(int sumaMultiplicaciones, int multSinDecimales) {
         return Math.abs(sumaMultiplicaciones - multSinDecimales);
     }
 
-    public static String obtenerDigitoVerificador(int restaNumeros) {
-        String resultadoDigito = String.valueOf(11 - restaNumeros);
-        if(resultadoDigito.equals("10")){
-            resultadoDigito = "k";
-        }else if(resultadoDigito.equals("11")){
-            resultadoDigito = "0";
+    private static String obtenerDigitoVerificador(int restaNumeros) {
+        String digitoVerificador = String.valueOf(11 - restaNumeros);
+        if(digitoVerificador.equals("10")){
+            digitoVerificador = "k";
+        }else if(digitoVerificador.equals("11")){
+            digitoVerificador = "0";
         }
-        return resultadoDigito;
+        return digitoVerificador;
     }
-
-    public static void mostrarResultados(String resultadoDigito) {
-        System.out.println("El digito verificador es: "+resultadoDigito);
-    }
-
 }
